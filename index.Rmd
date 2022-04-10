@@ -64,6 +64,8 @@ Xw %>%
 
 Over the last several decades inflation has become a metric of concern among economist across the globe. During this time, economist have tried to build several different types of models that include a wide variety of variables to forecast and pin down co-variance's and correlations between inflation and other key metrics within the economy. The Phillips curve has been a effective model for predicting the rate of inflation, using the rate of inflation on the Y-axis and the rate of unemployment on the X-axis. This paper will explore the efficacy of replacing unemployment with other variables by using statistical test to determine whether variables other than unemployment rate can accurately forecast the rate of inflation.
 
+To view the paper and code please click the link below.
+[link](https://owenrags.github.io/)
 
 ### _Data selection & manipulation_
 
@@ -117,7 +119,7 @@ ggplot(Zm, aes(Month, value )) +
 
 ```
 
-```{r train, include=FALSE}
+```{r train}
 fitPC <- train_data %>% 
   model(
     mPC = TSLM(dinfl12 ~ 1 +
@@ -220,7 +222,7 @@ OUT_SAMPLE
   
 ```
 
-
+Lastly, We can see from the plot below that both the green ( _IPMAN_ ) and red ( _ensemble_ ) line most closely follow the dark black line (actual data). Obviously we'd expect this given the MAPE values discussed above.
 
 ```{r all model forecast}
 FC_ALL %>% autoplot(filter(DATA_MUT, year(Month) > 2016), level = c(95))
@@ -229,3 +231,4 @@ FC_ALL %>% autoplot(filter(DATA_MUT, year(Month) > 2016), level = c(95))
 
 ### _Conclusion_
 
+After thorough analysis we can conclude that both Industrial production (manufacturing) and the ensemble model were the most effective in forecasting the rate of inflation. However, all of the models discussed in this paper 
