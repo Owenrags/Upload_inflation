@@ -98,8 +98,8 @@ DATA_MUT <- Xw %>% select(c(PCEPI, UNRATE, dif_MICH, IPMAN, HOUST)) %>%
     select(-c(PCEPI, UNRATE, IPMAN, HOUST)) %>%
     drop_na()
   
-train_data <- DATA_MUT %>% filter_index(~ "2019-12")
-test_data <- DATA_MUT %>% filter_index("2020-01" ~ .)
+train_data <- DATA_MUT %>% filter_index(~ "2018-12")
+test_data <- DATA_MUT %>% filter_index("2019-01" ~ .)
 
 ```  
 
