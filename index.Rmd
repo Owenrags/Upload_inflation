@@ -223,7 +223,7 @@ OUT_SAMPLE
   
 ```
 
-Lastly, We can see from the plot below that both the green ( _IPMAN_ ) and red ( _ensemble_ ) line most closely follow the dark black line (actual data). Obviously we'd expect this given the MAPE values discussed above.
+Lastly, we can see from the plot below that both the green ( _IPMAN_ ) and red ( _ensemble_ ) line most closely follow the dark black line (actual data). Obviously we'd expect this given the MAPE values discussed above.
 
 ```{r all model forecast}
 FC_ALL %>% autoplot(filter(DATA_MUT, year(Month) > 2016), level = c(95))
@@ -232,4 +232,4 @@ FC_ALL %>% autoplot(filter(DATA_MUT, year(Month) > 2016), level = c(95))
 
 ### _Conclusion_
 
-After thorough analysis we can conclude that both Industrial production (manufacturing) and the ensemble model were the most effective in forecasting the rate of inflation. However, all of the models discussed in this paper do a rather poor job forecasting the rate of inflation. 
+After thorough analysis we can conclude that both Industrial production (manufacturing) and the ensemble model were the most effective in forecasting the rate of inflation. However, all of the models discussed in this paper do a rather poor job forecasting the rate of inflation. When creating and testing these types of models we must keep in mind that inflation is highly dependent on number of variables that no simplistic model could capture the full effect of each variable. Future test and models may include more complex variables and indices that effect the rate of inflation. 
