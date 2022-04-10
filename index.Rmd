@@ -83,7 +83,7 @@ Why might we use these variables? According to Walras's law everything in the ec
 
 Before getting into the specifications of the model there are some properties of the data that need to be addressed. First, the data is from FRED (Federal Reserve Economic Data) and starts in January of 1982. Secondly and more importantly the data has been manipulated in order to be able to run a forecast. The variable _MICH_ was not seasonally adjusted and therefore, needed to be difference'd. Differentiating makes the data stationary meaning that over time the the properties of the data such as mean and variance stay constant over time. 
 
-```{r seasonality}
+```{r seasonality, include=FALSE}
 
 DATA_MUT <- Xw %>% select(c(PCEPI, UNRATE, dif_MICH, IPMAN, HOUST)) %>%
   mutate(infl = 1200*log(PCEPI/lag(PCEPI))) %>%
@@ -192,7 +192,9 @@ accuracy(FC_ALL, DATA_MUT)
 ```
 The table below displays the In-Sample Marginal Absolute Percentage Standard Errors also know as MAPE of each of our models, as well as the ensemble model. MAPE is defined as: 
                                   $MAPE = 100/n \sum^n_{t=1}|(A_t - F_t)/A_t|$ 
-where $A_t$ is the actual value in our data and $F_t$ is the forecast value. This is a nice measure of accuracy as it is a ratio depending on the actual value in our data. The absolute value of this ratio is then used so that all the error can be cumulative and not have negative errors offset positive errors. We can see from our table that for In-Sample accuracy, our model utilizing lagged inflation as well as the Industry Production variable produced the lowest MAPE. However, all of our models do not fit the data well and only slightly improve upon one another.
+where $A_t$ is the actual value in our data and $F_t$ is the forecast value. This is a nice measure of accuracy as it is a ratio depending on the actual value in our data. The absolute value of this ratio is then used so that all the error can be cumulative and not have negative errors offset positive errors.
+
+We can see from our table that for In-Sample accuracy, our model utilizing lagged inflation as well as the Industry Production variable produced the lowest MAPE. However, all of our models do not fit the data well and only slightly improve upon one another. Something to note is that the ensemble model is a close second to _IPMAN_, while the traditional Phillips curve is third. 
 
 
 ```{r Training Output}
@@ -205,7 +207,7 @@ IN_SAMPLE
   
 ```
 
-This next table reports the Out-of-Sample MAPE for each of our models as well as the ensemble model. It is clear that for our forecast, the models containing Industry Production metrics performed the best by what appears a pretty sizable margin. However, something to note is that our original Phillips curve appears to be the second best, well ahead of other variables such as _MICH_ that shows a really MAPE.   
+This next table reports the Out-of-Sample MAPE for each of our models as well as the ensemble model. It is clear that from our forecast, the model containing Industry Production metrics performed the best but not by a large margin. Again, the ensemble model is a close second; however, something to note is that MAPE for _HOUST_ improves, while other variables such as _MICH_ again shows a really poor MAPE. This may be a surprise based on the economic intuition that suggest that individuals expectations can create the economic environment they are expecting.
 
 
 ```{r Test Output}
@@ -226,3 +228,4 @@ FC_ALL %>% autoplot(filter(DATA_MUT, year(Month) > 2016), level = c(95))
 ```
 
 ### _Conclusion_
+

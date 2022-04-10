@@ -220,18 +220,6 @@ pre code {
 <p><em>HOUST</em> - New Privately-Owned Housing Units Started: Total Units</p>
 <p>Why might we use these variables? According to Walras’s law everything in the economy is connected in someway; but these variables were not selected at random. Economic theory tell us that certain sectors such as manufacturing may have some relation to inflation, hence the use of <em>IPMAN</em>. Other areas of economic theory tell us that consumer expectations and behaviors can drive market movements that can cause inflation. The variable such as <em>HOUST</em> may give us the the ability to say that if consumers are demanding houses, that then there is an increase in new housing units and could suggest that consumer confidence is high.This could also mean that individuals have more disposable income and that they are spending that income on durable goods, which in turn could suggest that unemployment is low. In just that one variable, we can learn a good deal about state of the economy. Variables such as <em>MICH</em> that provide “expectations” are similar in nature to <em>HOUST</em> as it gives insight into what consumers believe to be the state of the economy. In some ways the expectations set by consumers create a self-fulfilling prophecy where the consumers create the environment they expected to experience.</p>
 <p>Before getting into the specifications of the model there are some properties of the data that need to be addressed. First, the data is from FRED (Federal Reserve Economic Data) and starts in January of 1982. Secondly and more importantly the data has been manipulated in order to be able to run a forecast. The variable <em>MICH</em> was not seasonally adjusted and therefore, needed to be difference’d. Differentiating makes the data stationary meaning that over time the the properties of the data such as mean and variance stay constant over time.</p>
-<pre class="r"><code>DATA_MUT &lt;- Xw %&gt;% select(c(PCEPI, UNRATE, dif_MICH, IPMAN, HOUST)) %&gt;%
-  mutate(infl = 1200*log(PCEPI/lag(PCEPI))) %&gt;%
-  mutate(dinfl = infl - lag(infl,1)) %&gt;%
-  mutate(dinfl12 = 100*log(PCEPI/lag(PCEPI,12)) - lag(infl, 12)) %&gt;%
-  mutate(unrate = UNRATE - lag(UNRATE)) %&gt;%
-  mutate(ipman = 1200*log(IPMAN/lag(IPMAN))) %&gt;%
-  mutate(houst = 100*log(HOUST/lag(HOUST))) %&gt;%
-    select(-c(PCEPI, UNRATE, IPMAN, HOUST)) %&gt;%
-    drop_na()
-  
-train_data &lt;- DATA_MUT %&gt;% filter_index(~ &quot;2019-12&quot;)
-test_data &lt;- DATA_MUT %&gt;% filter_index(&quot;2020-01&quot; ~ .)</code></pre>
 </div>
 <div id="model-specifications" class="section level3">
 <h3><em>Model Specifications</em></h3>
@@ -241,7 +229,8 @@ test_data &lt;- DATA_MUT %&gt;% filter_index(&quot;2020-01&quot; ~ .)</code></pr
 </div>
 <div id="results-of-the-forecast" class="section level3">
 <h3><em>Results of the forecast</em></h3>
-<p>The table below displays the In-Sample Marginal Absolute Percentage Standard Errors also know as MAPE of each of our models, as well as the ensemble model. MAPE is defined as: <span class="math inline">\(MAPE = 100/n \sum^n_{t=1}|(A_t - F_t)/A_t|\)</span> where <span class="math inline">\(A_t\)</span> is the actual value in our data and <span class="math inline">\(F_t\)</span> is the forecast value. This is a nice measure of accuracy as it is a ratio depending on the actual value in our data. The absolute value of this ratio is then used so that all the error can be cumulative and not have negative errors offset positive errors. We can see from our table that for In-Sample accuracy, our model utilizing lagged inflation as well as the Industry Production variable produced the lowest MAPE. However, all of our models do not fit the data well and only slightly improve upon one another.</p>
+<p>The table below displays the In-Sample Marginal Absolute Percentage Standard Errors also know as MAPE of each of our models, as well as the ensemble model. MAPE is defined as: <span class="math inline">\(MAPE = 100/n \sum^n_{t=1}|(A_t - F_t)/A_t|\)</span> where <span class="math inline">\(A_t\)</span> is the actual value in our data and <span class="math inline">\(F_t\)</span> is the forecast value. This is a nice measure of accuracy as it is a ratio depending on the actual value in our data. The absolute value of this ratio is then used so that all the error can be cumulative and not have negative errors offset positive errors.</p>
+<p>We can see from our table that for In-Sample accuracy, our model utilizing lagged inflation as well as the Industry Production variable produced the lowest MAPE. However, all of our models do not fit the data well and only slightly improve upon one another. Something to note is that the ensemble model is a close second to <em>IPMAN</em>, while the traditional Phillips curve is third.</p>
 <pre class="r"><code>IN_SAMPLE &lt;- IN_sampleacc %&gt;% 
   select(c(&quot;.model&quot;, &quot;.type&quot;, &quot;MAPE&quot;)) %&gt;%
   kable(format = &quot;html&quot;, table.attr = &quot;sytle=&#39;widtth:30%$;&#39; &quot;) %&gt;% 
@@ -320,7 +309,7 @@ Training
 </tr>
 </tbody>
 </table>
-<p>This next table reports the Out-of-Sample MAPE for each of our models as well as the ensemble model. It is clear that for our forecast, the models containing Industry Production metrics performed the best by what appears a pretty sizable margin. However, something to note is that our original Phillips curve appears to be the second best, well ahead of other variables such as <em>MICH</em> that shows a really MAPE.</p>
+<p>This next table reports the Out-of-Sample MAPE for each of our models as well as the ensemble model. It is clear that from our forecast, the model containing Industry Production metrics performed the best but not by a large margin. Again, the ensemble model is a close second; however, something to note is that MAPE for <em>HOUST</em> improves, while other variables such as <em>MICH</em> again shows a really poor MAPE. This may be a surprise based on the economic intuition that suggest that individuals expectations can create the economic environment they are expecting.</p>
 <pre class="r"><code>OUT_SAMPLE &lt;- OUT_sampleacc %&gt;% 
   select(c(&quot;.model&quot;, &quot;.type&quot;, &quot;MAPE&quot;)) %&gt;%
   kable(format = &quot;html&quot;, table.attr = &quot;sytle=&#39;widtth:30%$;&#39; &quot;) %&gt;% 
