@@ -231,4 +231,4 @@ FC_ALL %>% autoplot(filter(DATA_MUT, year(Month) > 2016), level = c(95))
 
 ### _Conclusion_
 
-After thorough analysis we can conclude that both Industrial production (manufacturing) and the ensemble model were the most effective in forecasting the rate of inflation. However, all of the models discussed in this paper 
+After thorough analysis we can conclude that both Industrial production (manufacturing) and the ensemble model were the most effective in forecasting the rate of inflation. However, all of the models discussed in this paper do a rather poor job forecasting the rate of inflation. 
